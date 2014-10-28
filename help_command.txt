@@ -1,0 +1,21 @@
+exit             Exit Simuino
+
+load             Load selected sketch
+
+list             List available sketches (max 100). 
+                 Selected is marked with '>'
+
+<n>              Select sketch according to number in list
+
+run              Enter Run Mode
+
+info  <par>      Show info about <par>
+    - scen       Show scenario data
+    - conf       Display configuration
+    - loop       Show loop information
+    - error      Show Servuino errors
+    - g++        Show compilation errors
+
+sketch           Show selected sketch
+   
+help             Show this information
