@@ -12,13 +12,13 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-//====================================   
+//====================================
 int milliSleep(unsigned long milisec)
-//====================================   
+//====================================
 {
   struct timespec req={0};
   time_t sec=(int)(milisec/1000);
@@ -30,9 +30,9 @@ int milliSleep(unsigned long milisec)
   return 1;
 }
 
-//====================================   
+//====================================
 int microSleep(unsigned long microsec)
-//====================================   
+//====================================
 {
   struct timespec req={0};
   time_t sec=(int)(microsec/1000000L);
@@ -68,22 +68,22 @@ int analyzeEvent(char *event)
     if(strstr(event,"analogRead") || strstr(event,"digitalRead"))
       {
 	    sscanf(event,"%s %s %s",str,str1,str2);
-	    
+
 	    p = strstr(str1,"pin=");
 	    p = p+4;
 	    sscanf(p,"%d",&pin);
-	    
+
 	    p = strstr(str2,"value=");
 	    p = p+6;
 	    sscanf(p,"%d",&value);
-	    	    	    	    
+
 	    g_pinNo = pin;
 	    g_pinValue = value;
 	    if(strstr(event,"analog"))  g_pinType = ANA;
 	    if(strstr(event,"digital")) g_pinType = DIG;
     	return(g_pinType);
-      } 
-    return(0); 
+      }
+    return(0);
   }
 }
 //====================================
@@ -93,7 +93,7 @@ void show(WINDOW *win)
   int next;
 
   box(win,0,0);
-  if(win == uno) 
+  if(win == uno)
     {
       wmove(win,0,2);
       if(confBoardType ==UNO)
@@ -130,7 +130,7 @@ void show(WINDOW *win)
       wmove(win,0,2);
       wprintw(win,"----------Messages----------");
     }
-  
+
   wmove(uno,board_h-2,4);
   wprintw(uno,"                  ");
   wmove(uno,board_h-2,4);
@@ -161,7 +161,7 @@ void showError(const char *m, int value)
   char err_msg[300];
   strcpy(err_msg,"SimuinoERROR: ");
   strcat(err_msg,m);
-  fprintf(err,"%s %d\n",err_msg,value,-1);
+  fprintf(err,"%s %d\n",err_msg,value);
   error = 1;
 }
 
@@ -294,7 +294,7 @@ void unoInfo()
 //====================================
 {
 
-  wmove(uno,ap+2,3); 
+  wmove(uno,ap+2,3);
 
   if(g_existError == S_YES)
   {
@@ -342,16 +342,16 @@ int wCustomLog(char *in, char *out)
   int pin=0;
 
   p = strstr(in,":");
-  if(p==NULL) 
+  if(p==NULL)
   {
     showError("Custom Log: Cant find any semicolon",0);
-    strcpy(out,"Custom : Failed"); 
+    strcpy(out,"Custom : Failed");
     return(0);
   }
 
-  p++; 
-  sscanf(p,"%d",&pin); 
-  p = strstr(p,"\""); 
+  p++;
+  sscanf(p,"%d",&pin);
+  p = strstr(p,"\"");
   if(p==NULL)
   {
     showError("Custom Log: Cant find first \" ",0);
@@ -359,8 +359,8 @@ int wCustomLog(char *in, char *out)
     return(0);
   }
 
-  p++; 
-  q = strstr(p,"\""); 
+  p++;
+  q = strstr(p,"\"");
   if(q==NULL)
   {
     showError("Custom Log: Cant find second \" ",0);
@@ -368,7 +368,7 @@ int wCustomLog(char *in, char *out)
     return(0);
   }
 
-  strcpy(q,"\0"); 
+  strcpy(q,"\0");
   strcpy(out,p);
   return(pin);
 }
@@ -405,69 +405,69 @@ void readSketchInfo()
       while (fgets(row,80,in)!=NULL)
 	{
 
-	  if(p=strstr(row,"SKETCH_NAME:"))
+	  if((p=strstr(row,"SKETCH_NAME:")))
 	    {
 	      q = strstr(p,":");q++;
 	      sscanf(q,"%s",appName);
 	    }
-	  if(p=strstr(row,"BOARD_TYPE:"))
+	  if((p=strstr(row,"BOARD_TYPE:")))
 	    {
 	      if(strstr(row,"UNO") != NULL) confBoardType = UNO;
 	      if(strstr(row,"MEGA")!= NULL) confBoardType = MEGA;
 	    }
 
-	  if(p=strstr(row,"WINDOWLAYOUT:"))
+	  if((p=strstr(row,"WINDOWLAYOUT:")))
 	    {
 		  q = strstr(p,":");q++;
 	      sscanf(q,"%d",&confWinMode);
 	    }
-	//  if(p=strstr(row,"SO_DELAY:"))
+	//  if((p=strstr(row,"SO_DELAY:")))
 	//    {
 	//      q = strstr(p,":");q++;
 	//      sscanf(q,"%d",appName);
 	//    }
-	  if(p=strstr(row,"SCENSIMLEN:"))
+	  if((p=strstr(row,"SCENSIMLEN:")))
 	    {
 		  q = strstr(p,":");q++;
 	      sscanf(q,"%d",&confSteps);
 	    }
-	  if(p=strstr(row,"PINMODE_IN:"))
+	  if((p=strstr(row,"PINMODE_IN:")))
 	    {
 	      pin = wCustomLog(p,res);
 	      strcpy(textPinModeIn[pin],res);
 	    }
-	  if(p=strstr(row,"PINMODE_OUT:"))
+	  if((p=strstr(row,"PINMODE_OUT:")))
 	    {
 	      pin = wCustomLog(p,res);
 	      strcpy(textPinModeOut[pin],res);
 	    }
-	  if(p=strstr(row,"DIGITALWRITE_LOW:"))
+	  if((p=strstr(row,"DIGITALWRITE_LOW:")))
 	    {
 	      pin = wCustomLog(p,res);
 	      strcpy(textDigitalWriteLow[pin],res);
 	    }
-	  if(p=strstr(row,"DIGITALWRITE_HIGH:"))
+	  if((p=strstr(row,"DIGITALWRITE_HIGH:")))
 	    {
 	      pin = wCustomLog(p,res);
 	      strcpy(textDigitalWriteHigh[pin],res);
 	    }
-	  if(p=strstr(row,"ANALOGREAD:"))
+	  if((p=strstr(row,"ANALOGREAD:")))
 	    {
 	      pin = wCustomLog(p,res);
 	      strcpy(textAnalogRead[pin],res);
 	    }
-	  if(p=strstr(row,"DIGITALREAD:"))
+	  if((p=strstr(row,"DIGITALREAD:")))
 	    {
 	      pin = wCustomLog(p,res);
 	      strcpy(textDigitalRead[pin],res);
 	    }
-	  if(p=strstr(row,"ANALOGWRITE:"))
+	  if((p=strstr(row,"ANALOGWRITE:")))
 	    {
 	      pin = wCustomLog(p,res);
 	      strcpy(textAnalogWrite[pin],res);
 	    }
 	}
-      fclose(in); 
+      fclose(in);
     }
 }
 
@@ -501,7 +501,7 @@ void initSim()
 
       strcpy(textAnalogWrite[i],"void");
       strcpy(textDigitalRead[i],"void");
-   
+
       currentValueD[i] = 0;
     }
   for(i=0;i<MAX_PIN_ANALOG_MEGA;i++)
@@ -531,8 +531,8 @@ void readConfig(char *cf)
   FILE *in;
   char row[80],*p,temp[40];
   int x;
-  
-  
+
+
   in = fopen(cf,"r");
   if(in == NULL)
     {
@@ -553,29 +553,29 @@ void readConfig(char *cf)
 	  {
 	    if(row[0] != '#')
 	    {
-	       if(p=strstr(row,"BOARD_TYPE:"))
+	       if((p=strstr(row,"BOARD_TYPE:")))
 		   {
 		     if(strstr(row,"UNO") != NULL) confBoardType = UNO;
 	         if(strstr(row,"MEGA")!= NULL) confBoardType = MEGA;
 		   }
-		   if(p=strstr(row,"SIM_LENGTH:"))
+		   if((p=strstr(row,"SIM_LENGTH:")))
 		   {
 		     sscanf(p,"%s%d",temp,&confSteps);
 		   }
-	       if(p=strstr(row,"WIN_LAYOUT:"))
+	       if((p=strstr(row,"WIN_LAYOUT:")))
 		   {
 		     sscanf(p,"%s%d",temp,&confWinMode);
 		   }
-           if(p=strstr(row,"SKETCH_NAME:"))
+           if((p=strstr(row,"SKETCH_NAME:")))
            {
              sscanf(p,"%s%s",temp,confSketchFile);
            }
-           if(p=strstr(row,"SO_DELAY:"))
+           if((p=strstr(row,"SO_DELAY:")))
 		   {
 		     sscanf(p,"%s%d",temp,&g_runDelay);
 		   }
 	     }
-	 
+
        }
      }
   fclose(in);
@@ -600,7 +600,7 @@ void readDebug()
   FILE *in;
   char row[80];
   int step, line;
-  
+
   in = fopen(fileServInoDebug,"r");
   if(in == NULL)
     {
@@ -616,7 +616,7 @@ void readDebug()
 	      sscanf(row,"%d%d",&step,&line);
 	      g_lineSketch[step] = line;
 	    }
-	  
+
 	}
     }
   fclose(in);
@@ -657,7 +657,7 @@ void runLoop(int dir)
 	}
     }
   return;
-}    
+}
 
 //====================================
 void runLoops(int targetLoop)
@@ -670,7 +670,7 @@ void runLoops(int targetLoop)
       stop = runStep(S_FORWARD);
     }
   return;
-}    
+}
 
 //====================================
 void runAll(int stop)
@@ -692,7 +692,7 @@ void runAll(int stop)
     }
 
   return;
-}    
+}
 
 //====================================
 void endOfSimulation()
@@ -707,7 +707,7 @@ void endOfSimulation()
   //wprintw(slog,"-=End of Simulation=-");
   show(slog);
   return;
-}    
+}
 
 //====================================
 void runNextRead()
@@ -722,7 +722,7 @@ void runNextRead()
       strcpy(event,simulation[currentStep]);
     }
   return;
-}    
+}
 
 //====================================
 void runPrevRead()
@@ -737,7 +737,7 @@ void runPrevRead()
       strcpy(event,simulation[currentStep]);
     }
   return;
-}    
+}
 
 
 //====================================
@@ -747,7 +747,7 @@ void readSimulation()
   FILE *in;
   char row[SIZE_ROW],*p,temp[SIZE_ROW],junk[5];
   int step=0,loop=0;
-  
+
   g_steps       = 0;
   g_loops       = 0;
   g_comments    = 0;
@@ -764,7 +764,7 @@ void readSimulation()
     {
       while (fgets(row,SIZE_ROW,in)!=NULL)
 	{
-	  
+
 	  if(row[0] == '+')
 	    {
 	      //printf("%s",row);
@@ -779,7 +779,7 @@ void readSimulation()
 		  showError(row,step);
 		  showError(row,g_steps);
 		}
-	      if(p=strstr(row,"servuinoLoop "))
+	      if((p=strstr(row,"servuinoLoop ")))
 		{
 		  sscanf(p,"%s%d",temp,&loop);
 		  loopPos[loop] = step;
@@ -802,15 +802,15 @@ void readSimulation()
 		  strcat(simComment[g_comments],p);
 		}
 	    }
-	  
-          else if(p=strstr(row,"ENDOFSIM"))
+
+          else if((p=strstr(row,"ENDOFSIM")))
             {
 	      loop++;
               loopPos[loop]  = step+1;
 	      loopStep[loop] = step+1;
               strcpy(simulation[step+1],"End of Simulation !");
             }
-          else if(p=strstr(row,"SCENARIODATA"))
+          else if((p=strstr(row,"SCENARIODATA")))
             {
               sscanf(p,"%s%d%d%d",temp,&scenDigital,&scenAnalog,&scenInterrupt);
             }
@@ -818,7 +818,7 @@ void readSimulation()
 
       g_loops = loop;
       //loopPos[loop] = step;
- 
+
       readStatus();
 
       readSerial();
@@ -830,7 +830,7 @@ void readSimulation()
       fclose(in);
     }
   return;
-}    
+}
 
 //====================================
 void showScenario(char *fileName)
@@ -889,7 +889,7 @@ void selectProj(int projNo,char *projName)
       while (fgets(row,SIZE_ROW,in)!=NULL)
         {
 	      i++;
-	      if(i==projNo) 
+	      if(i==projNo)
 	      {
               sscanf(row,"%s",projName);
               g_currentSketchStatus = SO_SELECTED;
@@ -949,14 +949,14 @@ void readMsg(char *fileName)
 	      wscrl(msg,msg_h-2);
 	      i = 1;
 	      wmove(msg,i,1);
-	      wprintw(msg,row);  
+	      wprintw(msg,row);
 	    }
 	}
       show(msg);
       fclose(in);
     }
   return;
-}    
+}
 
 //====================================
 void readFile(char *fileName,int line)
@@ -983,7 +983,7 @@ void readFile(char *fileName,int line)
       else
       {
 		 from = 0;
-		 to   = msg_h;  
+		 to   = msg_h;
 	  }
       if(from < 0)from  = 0;
       while (fgets(row,SIZE_ROW,in)!=NULL)
@@ -1006,7 +1006,7 @@ void readFile(char *fileName,int line)
       fclose(in);
     }
   return;
-}    
+}
 
 
 //====================================
@@ -1014,7 +1014,7 @@ void init(int mode)
 //====================================
 {
   int i,j,k;
-  
+
   if(confBoardType == UNO)
     {
       board_w = UNO_W;
@@ -1053,12 +1053,12 @@ void init(int mode)
   start_color();
   init_pair(1,COLOR_BLACK,COLOR_BLUE);
   init_pair(2,COLOR_BLACK,COLOR_GREEN);
-  init_pair(3,COLOR_BLUE,COLOR_WHITE); 
-  init_pair(4,COLOR_RED,COLOR_WHITE); 
-  init_pair(5,COLOR_MAGENTA,COLOR_WHITE); 
-  init_pair(6,COLOR_WHITE,COLOR_BLACK); 
+  init_pair(3,COLOR_BLUE,COLOR_WHITE);
+  init_pair(4,COLOR_RED,COLOR_WHITE);
+  init_pair(5,COLOR_MAGENTA,COLOR_WHITE);
+  init_pair(6,COLOR_WHITE,COLOR_BLACK);
   init_pair(7,COLOR_WHITE,COLOR_BLUE);
-  
+
   /*     COLOR_BLACK   0 */
   /*     COLOR_RED     1 */
   /*     COLOR_GREEN   2 */
@@ -1068,15 +1068,15 @@ void init(int mode)
   /*     COLOR_CYAN    6 */
   /*     COLOR_WHITE   7 */
 
-  // Board Window    
+  // Board Window
   uno=newwin(board_h,board_w,board_x,board_y);
   wbkgd(uno,COLOR_PAIR(UNO_COLOR));
   //box(uno, 0 , 0);
 
-  wmove(uno,dp-1,RF);waddch(uno,ACS_ULCORNER); 
-  wmove(uno,dp-1,RF+board_w-3);waddch(uno,ACS_URCORNER); 
-  wmove(uno,ap+1,RF);waddch(uno,ACS_LLCORNER); 
-  wmove(uno,ap+1,RF+board_w-3);waddch(uno,ACS_LRCORNER); 
+  wmove(uno,dp-1,RF);waddch(uno,ACS_ULCORNER);
+  wmove(uno,dp-1,RF+board_w-3);waddch(uno,ACS_URCORNER);
+  wmove(uno,ap+1,RF);waddch(uno,ACS_LLCORNER);
+  wmove(uno,ap+1,RF+board_w-3);waddch(uno,ACS_LRCORNER);
   for(i=1;i<board_w-3;i++)
     {
       wmove(uno,dp-1,RF+i);
@@ -1126,33 +1126,33 @@ void init(int mode)
 	{
 	  j++;
 	  digPinCol[i]  = board_w - 35;
-	  digPinRow[i]  = j; 
+	  digPinRow[i]  = j;
 	  digValCol[i]  = board_w - 43;
-	  digValRow[i]  = j; 
+	  digValRow[i]  = j;
 	  digIdCol[i]   = board_w - 39;
-	  digIdRow[i]   = j; 
+	  digIdRow[i]   = j;
 	  digActCol[i]  = board_w - 41;
-	  digActRow[i]  = j; 
+	  digActRow[i]  = j;
 	  digStatCol[i] = board_w - 32;
-	  digStatRow[i] = j; 
+	  digStatRow[i] = j;
 	}
       j = dp+3;
       for(i=23;i<max_digPin;i=i+2)
 	{
 	  j++;
 	  digPinCol[i]  = board_w - 11;
-	  digPinRow[i]  = j; 
+	  digPinRow[i]  = j;
 	  digValCol[i]  = board_w -  3;
-	  digValRow[i]  = j; 
+	  digValRow[i]  = j;
 	  digIdCol[i]   = board_w -  9;
-	  digIdRow[i]   = j; 
+	  digIdRow[i]   = j;
 	  digActCol[i]  = board_w -  6;
-	  digActRow[i]  = j; 
+	  digActRow[i]  = j;
 	  digStatCol[i] = board_w - 14;
-	  digStatRow[i] = j; 
+	  digStatRow[i] = j;
 	}
     }
-  for(i=0;i<max_anaPin;i++) 
+  for(i=0;i<max_anaPin;i++)
     {
       anaPinCol[i] = RF+27+5*i;
       anaPinRow[i] = ap+1;
@@ -1185,8 +1185,8 @@ void init(int mode)
       log_h = s_row;
       log_w = LOG_W;
       log_x = 0;
-      log_y = board_w;   
-      
+      log_y = board_w;
+
       ser_h = s_row;
       ser_w = s_col - board_w - log_w;
       ser_x = 0;
@@ -1203,7 +1203,7 @@ void init(int mode)
       log_h = s_row/2;
       log_w = s_col-uno_w;
       log_x = 0;
-      log_y = board_w;   
+      log_y = board_w;
 
       ser_h = s_row/2+1;
       ser_w = s_col-board_w;
@@ -1221,7 +1221,7 @@ void init(int mode)
       log_h = s_row-10;
       log_w = s_col-board_w;
       log_x = 0;
-      log_y = board_w;   
+      log_y = board_w;
 
       ser_h = 10;
       ser_w = s_col-board_w;
@@ -1230,16 +1230,16 @@ void init(int mode)
     }
 
   if(mode == 3) // 10 on 90
-    {      
+    {
       msg_h = s_row - board_h;
       msg_w = board_w;
       msg_x = board_h;
       msg_y = 0;
-      
+
       log_h = 10;
       log_w = s_col-board_w;
       log_x = 0;
-      log_y = board_w;   
+      log_y = board_w;
 
       ser_h = s_row-10;
       ser_w = s_col-board_w;
@@ -1248,16 +1248,16 @@ void init(int mode)
     }
 
   if(mode == 4) // big message to the right. Log on Ser
-    {      
+    {
       msg_h = s_row;
       msg_w = s_col - board_w;
       msg_x = 0;
       msg_y = board_w;
-      
+
       log_h = s_row-board_h-10;
       log_w = board_w;
       log_x = board_h;
-      log_y = 0;   
+      log_y = 0;
 
       ser_h = s_row-board_h-log_h;
       ser_w = board_w;
@@ -1266,16 +1266,16 @@ void init(int mode)
     }
 
   if(mode == 5) // big message to the right. Log and Ser side by side
-    {      
+    {
       msg_h = s_row;
       msg_w = s_col - board_w;
       msg_x = 0;
       msg_y = board_w;
-      
+
       log_h = s_row-board_h;
       log_w = board_w/2;
       log_x = board_h;
-      log_y = 0;   
+      log_y = 0;
 
       ser_h = s_row-board_h;
       ser_w = board_w/2;
@@ -1291,7 +1291,7 @@ void init(int mode)
   slog=newwin(log_h,log_w,log_x,log_y);
   scrollok(slog,true);
   wbkgd(slog,COLOR_PAIR(LOG_COLOR));
-  show(slog); 
+  show(slog);
 
   ser=newwin(ser_h,ser_w,ser_x,ser_y);
   scrollok(ser,true);
@@ -1310,7 +1310,7 @@ int  countRowsInFile(char *fileName)
   FILE *in;
   char row[SIZE_ROW];
   int res=0;
-  
+
   in = fopen(fileName,"r");
   if(in == NULL)
     {
@@ -1346,10 +1346,10 @@ char *replace_str(char *str, char orig[], char rep[])
   sprintf(buffer+(p-str), "%s%s", rep, p+strlen(orig));
   strcpy(work,buffer);
 
-  while(p=strstr(work, orig))
+  while((p=strstr(work, orig)))
     {
       strncpy(buffer, work, p-work); // Copy characters from 'str' start to 'orig' st$
-      buffer[p-work] = '\0';      
+      buffer[p-work] = '\0';
       sprintf(buffer+(p-work), "%s%s", rep, p+strlen(orig));
       strcpy(work,buffer);
     }
@@ -1363,7 +1363,7 @@ void  instrument(char *fileFrom, char *fileTo)
   FILE *in,*out;
   char row[SIZE_ROW],sTemp[80],sIn[80],*p;
   int res=0,count;
-  
+
   in = fopen(fileFrom,"r");
   if(in == NULL)
     {
@@ -1386,7 +1386,7 @@ void  instrument(char *fileFrom, char *fileTo)
 
       if(strstr(row,"setup(") != NULL)g_row_setup = count;
       if(strstr(row,"loop(")  != NULL)g_row_loop  = count;
-      
+
       strcpy(sIn,"pinMode(");
       sprintf(sTemp,"pinModeX(%d,",count);
       p = replace_str(row,sIn,sTemp);
@@ -1450,7 +1450,7 @@ void  instrument(char *fileFrom, char *fileTo)
       strcpy(sIn,"Serial.read(");
       sprintf(sTemp,"Serial.readX(%d",count);
       p = replace_str(p,sIn,sTemp);
-      
+
       strcpy(sIn,"EEPROM.write(");
       sprintf(sTemp,"EEPROM.writeX(%d,",count);
       p = replace_str(p,sIn,sTemp);
@@ -1466,7 +1466,7 @@ void  instrument(char *fileFrom, char *fileTo)
       strcpy(sIn,"Serial.flush(");
       sprintf(sTemp,"Serial.flushX(%d",count);
       p = replace_str(p,sIn,sTemp);
-      
+
       if(strstr(row,"#include") != NULL)
       {
         strcpy(sIn,"<");
@@ -1492,11 +1492,11 @@ void anyErrors()
 {
   int x;
   char syscom[200];
-  
+
   g_existError = S_NO;
   x = system("rm temp.txt");
   sprintf(syscom,"cat %s %s %s> %s",fileError,fileServError,fileCopyError,fileTemp);
-  x = system(syscom); 
+  x = system(syscom);
   x = countRowsInFile(fileTemp);
   if(x > 0 && x != 999)
   {
@@ -1546,7 +1546,7 @@ int readScenario()
   FILE *in;
   char row[SIZE_ROW];
   int step=0,res=0,loop=0;
-  
+
   in = fopen(fileServArduino,"r");
   if(in == NULL)
     {
@@ -1586,7 +1586,7 @@ void readTime()
   FILE *in;
   char row[SIZE_ROW],junk[10];
   int i,step,delay;
-  
+
 
   for(i=0;i<MAX_STEP;i++)stepDelay[i] = 0;
 
@@ -1758,7 +1758,7 @@ void readSerial()
   FILE *in;
   char *left,*right;  char row[SIZE_ROW],line[SIZE_ROW],value[SIZE_ROW],*p;
   int  step=0,res=0;
-  
+
   in = fopen(fileServSerial,"r");
   if(in == NULL)
     {
@@ -1781,7 +1781,7 @@ void readSerial()
 	  //printf("%d %s left=%s right=%s\n",step,line,left,right);
  	  if(right && left)
 	    {
-	      strcpy(right,"\0"); 
+	      strcpy(right,"\0");
 	      strcpy(serialM[step],++left);
 	      //printf("Serial:%s\n",serialM[step]);
 	    }
@@ -1801,7 +1801,7 @@ void displayStatus()
   int digPinValue[MAX_PIN_DIGITAL_MEGA];
   int anaPinValue[MAX_PIN_ANALOG_MEGA];
 
-  
+
   // ======= Display =======
 
   // Digital Pin Mode
@@ -1822,37 +1822,37 @@ void displayStatus()
       else if(mode==OUTPUT)
 	{
 	  wprintw(uno,"Out");
-	}     
+	}
       else if(mode==RX)
 	{
 	  wprintw(uno,"RX ");
-	}     
+	}
       else if(mode==TX)
 	{
 	  wprintw(uno,"TX ");
-	}      
+	}
       else if(mode==RISING)
 	{
 	  wprintw(uno,"IR ");
-	}      
+	}
       else if(mode==FALLING)
 	{
 	  wprintw(uno,"IF ");
-	}   
+	}
       else if(mode==CHANGE)
 	{
 	  wprintw(uno,"IC ");
-	}     
+	}
       else if(mode==LOW)
 	{
 	  wprintw(uno,"IL ");
-	}     
+	}
       else if(mode==S_WRONG)
 	{
 	  wprintw(uno,"???");
 	}
-      else    
-	wprintw(uno,"   ");  
+      else
+	wprintw(uno,"   ");
 
     }
 
@@ -1889,7 +1889,7 @@ void displayStatus()
       else
 	wprintw(uno,"   -",value);
     }
-  
+
   // Action event
   for(pin=0;pin<max_totPin;pin++)
     {
@@ -1904,7 +1904,7 @@ void displayStatus()
       else if(value == 2)
 	wprintw(uno,"W");
       else
-	wprintw(uno," ");	
+	wprintw(uno," ");
     }
 
 
@@ -1931,7 +1931,7 @@ void readSetting()
       while (fgets(row,120,in)!=NULL)
 	{
 
-	  if(p=strstr(row,"SKETCH:"))
+	  if((p=strstr(row,"SKETCH:")))
 	    {
 	      q = strstr(p,":");q++;
 	      sscanf(q,"%s",g_currentSketch);

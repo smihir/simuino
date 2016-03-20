@@ -1,7 +1,10 @@
 # Makefile for simuino on OSX
 
-simuino: simuino.c
-	g++ -o simino simuino.c -lncurses
+simuino: simuino.cpp
+	clang -o $@ $^ -lncurses
 
 clean:
 	rm -rf *.o simuino
+
+run: simuino
+	./$^
