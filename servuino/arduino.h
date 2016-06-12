@@ -49,11 +49,6 @@ typedef int byte;
 typedef int word;
 typedef bool boolean;
 
-typedef unsigned int uint8_t;
-typedef unsigned int uint16_t;
-typedef unsigned int uint32_t;
-typedef unsigned int uint64_t;
-
 // Functions
 int   bitRead(int x, int n);
 void  bitSet(unsigned int *x, int n);
